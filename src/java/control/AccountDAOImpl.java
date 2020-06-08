@@ -18,11 +18,11 @@ import model.Account;
  *
  * @author DuongLee
  */
-public class AccountDAO implements DAO{
+public class AccountDAOImpl implements DAO{
     
     private Connection connection;
 
-    public AccountDAO(Connection connection) {
+    public AccountDAOImpl(Connection connection) {
         this.connection = connection;
     }
     
@@ -44,9 +44,29 @@ public class AccountDAO implements DAO{
                 rs.add(account);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return rs;
+    }
+
+    @Override
+    public void add(Object t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void edit(Object t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Object t) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object searchById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
