@@ -4,9 +4,17 @@
         <servlet-name>DoAccount</servlet-name>
         <servlet-class>router.DoAccount</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DoHome</servlet-name>
+        <servlet-class>router.DoHome</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DoAccount</servlet-name>
         <url-pattern>/DoAccount</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoHome</servlet-name>
+        <url-pattern>/DoHome</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
