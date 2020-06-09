@@ -8,6 +8,10 @@
         <servlet-name>DoHome</servlet-name>
         <servlet-class>router.DoHome</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DoCategory</servlet-name>
+        <servlet-class>router.DoCategory</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DoAccount</servlet-name>
         <url-pattern>/DoAccount</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>DoHome</servlet-name>
         <url-pattern>/DoHome</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoCategory</servlet-name>
+        <url-pattern>/DoCategory</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
