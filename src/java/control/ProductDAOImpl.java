@@ -21,9 +21,10 @@ import model.Product;
  */
 public class ProductDAOImpl implements DAO{
 private Connection connection;
-
+private CategoryDAOImpl cdi;
     public ProductDAOImpl(Connection connection) {
         this.connection = connection;
+        this.cdi = new CategoryDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Product> getAll() {
@@ -36,8 +37,17 @@ private Connection connection;
             while (rss.next()) {
                 Product product = new Product();
                 product.setId(rss.getInt("Id"));
-                //product.setCategoryId(rss.getObject(2, Category.class));
-
+                Category c = this.cdi.searchById(rss.getInt("CategoryId"));
+                if(c != null){
+                    product.setCategoryId(c);
+                }
+                product.setPictures(rss.getString("Pictures"));
+                product.setDescription(rss.getString("Description"));
+                product.setUnitPrice(rss.getInt("UnitPrice"));
+                product.setQuantity(rss.getInt("Quantity"));
+                product.setProductname(rss.getString("Productname"));
+                
+                
                 rs.add(product);
             }
         } catch (SQLException ex) {
@@ -53,9 +63,7 @@ private Connection connection;
             
             String query = "INSERT INTO Product VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-//            ps.setInt(1, Product.getCart().getId());
-//            ps.setInt(2, Product.getItem().getId());
-//            ps.setInt(3, Product.getQuantity());
+
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,7 +82,7 @@ private Connection connection;
 
     @Override
     public Product searchById(int id) {
-        Product b = new Product();
+        Product b = null;
         try {
             String sql = "select * from Product where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -82,9 +90,16 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-//                b.setId(rs.getInt("Id"));
-//                b.setPaymentId(rs.getObject(2, Payment.class));
-//                b.setPayDate(rs.getString("PayDate"));
+                b.setId(rs.getInt("Id"));
+                Category c = this.cdi.searchById(rs.getInt("CategoryId"));
+                if(c != null){
+                    b.setCategoryId(c);
+                }
+                b.setPictures(rs.getString("Pictures"));
+                b.setDescription(rs.getString("Description"));
+                b.setUnitPrice(rs.getInt("UnitPrice"));
+                b.setQuantity(rs.getInt("Quantity"));
+                b.setProductname(rs.getString("Productname"));
                 
             }
         } catch (SQLException ex) {

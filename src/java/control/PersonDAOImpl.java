@@ -6,7 +6,14 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Address;
+import model.Fullname;
 import model.Person;
 
 /**
@@ -15,11 +22,14 @@ import model.Person;
  */
 public class PersonDAOImpl implements DAO{
 private Connection connection;
-
+private AddressDAOImpl adi;
+private FullnameDAOImpl fdi;
     public PersonDAOImpl(Connection connection) {
         this.connection = connection;
+        this.adi = new AddressDAOImpl(this.connection);
+        this.fdi = new FullnameDAOImpl(this.connection);
     }
-    @Override
+   
    @Override
     public ArrayList<Person> getAll() {
         ArrayList<Person> rs = new ArrayList<>();
@@ -30,9 +40,14 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Person Person = new Person();
-                Person.setCart(rss.getObject(1, Cart.class));
-                Person.setItem(rss.getObject(2, Item.class));
-                Person.setQuantity(rss.getInt("quantity"));
+                Fullname f = this.fdi.searchById(rss.getInt("FullNameid"));
+                Address a = this.adi.searchById(rss.getInt("AddressId"));
+                if(f!=null && a!= null){
+                    Person.setFullNameId(f);
+                    Person.setAddressId(a);
+                }
+                Person.setId(rss.getInt("Id"));
+                Person.setDob(rss.getString("Dob"));
 
                 rs.add(Person);
             }
@@ -49,14 +64,12 @@ private Connection connection;
             
             String query = "INSERT INTO Person VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Person.getCart().getId());
-            ps.setInt(2, Person.getItem().getId());
-            ps.setInt(3, Person.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -66,10 +79,9 @@ private Connection connection;
             String sql = "update Person set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
+            
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -83,8 +95,6 @@ private Connection connection;
             String sql = "delete from Person where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -93,7 +103,7 @@ private Connection connection;
 
     @Override
     public Person searchById(int id) {
-        Person b = new Person();
+        Person b = null;
         try {
             String sql = "select * from Person where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -101,9 +111,14 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
+                Fullname f = this.fdi.searchById(rs.getInt("FullNameid"));
+                Address a = this.adi.searchById(rs.getInt("AddressId"));
+                if(f!=null && a!= null){
+                    b.setFullNameId(f);
+                    b.setAddressId(a);
+                }
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+                b.setDob(rs.getString("Dob"));
                 
             }
         } catch (SQLException ex) {

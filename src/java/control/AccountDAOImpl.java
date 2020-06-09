@@ -106,7 +106,7 @@ public class AccountDAOImpl implements DAO {
 
     @Override
     public Account searchById(int id) {
-        Account a = new Account();
+        Account a = null;
         try {
             String sql = "select * from account where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -115,7 +115,10 @@ public class AccountDAOImpl implements DAO {
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 a.setId(rs.getInt("Id"));
-                a.setPersonId(rs.getObject(2, Person.class));
+                Person person = (Person) this.persondao.searchById(rs.getInt("Personid"));
+                if (person != null) {
+                    a.setPersonId(person);
+                }
                 a.setUsrname(rs.getString("Usrname"));
                 a.setPassword(rs.getString("Password"));
             }

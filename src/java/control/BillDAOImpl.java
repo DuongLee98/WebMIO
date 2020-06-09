@@ -21,9 +21,10 @@ import model.Payment;
  */
 public class BillDAOImpl implements DAO{
 private Connection connection;
-
+    private PaymentDAOImpl pdi;
     public BillDAOImpl(Connection connection) {
         this.connection = connection;
+        this.pdi = new PaymentDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Bill> getAll() {
@@ -36,10 +37,9 @@ private Connection connection;
             while (rss.next()) {
                 Bill bill = new Bill();
                 bill.setId(rss.getInt("Id"));
-                bill.setPaymentId(rss.getObject(2, Payment.class));
+                Payment pay = this.pdi.searchById(rss.getInt("PaymentId"));
                 bill.setPayDate(rss.getString("PayDate"));
-                
-
+ 
                 rs.add(bill);
             }
         } catch (SQLException ex) {
@@ -99,7 +99,7 @@ private Connection connection;
 
     @Override
     public Bill searchById(int id) {
-        Bill b = new Bill();
+        Bill b = null;
         try {
             String sql = "select * from bill where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -108,7 +108,10 @@ private Connection connection;
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
+                Payment pay = this.pdi.searchById(rs.getInt("PaymentId"));
+                if(p != null){
+                    b.setPaymentId(pay);
+                }
                 b.setPayDate(rs.getString("PayDate"));
                 
             }

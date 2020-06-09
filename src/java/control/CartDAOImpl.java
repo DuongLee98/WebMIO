@@ -97,7 +97,7 @@ private Connection connection;
 
     @Override
     public Cart searchById(int id) {
-        Cart b = new Cart();
+        Cart b = null;
         try {
             String sql = "select * from Cart where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);

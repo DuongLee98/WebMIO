@@ -6,7 +6,14 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Cart;
+import model.Customer;
 import model.Myorder;
 
 /**
@@ -15,9 +22,12 @@ import model.Myorder;
  */
 public class MyorderDAOImpl implements DAO{
 private Connection connection;
-
+private CustomerDAOImpl cdi;
+private CartDAOImpl cadi;
     public MyorderDAOImpl(Connection connection) {
         this.connection = connection;
+        this.cadi = new CartDAOImpl(this.connection);
+        this.cdi = new CustomerDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Myorder> getAll() {
@@ -29,10 +39,16 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Myorder Myorder = new Myorder();
-                Myorder.setCart(rss.getObject(1, Cart.class));
-                Myorder.setItem(rss.getObject(2, Item.class));
-                Myorder.setQuantity(rss.getInt("quantity"));
-
+                Cart c= this.cadi.searchById(rss.getInt("CartId"));
+                Customer cus = this.cdi.searchById(rss.getInt("CustomerPersonId"));
+                if(c != null && cus != null){
+                    Myorder.setCustomerPersonId(cus);
+                    Myorder.setCartId(c);
+                }
+                Myorder.setId(rss.getInt("Id"));
+                Myorder.setOrderDate(rss.getString("OrderDate"));
+                Myorder.setShipTo(rss.getString("ShipTo"));
+                
                 rs.add(Myorder);
             }
         } catch (SQLException ex) {
@@ -48,14 +64,12 @@ private Connection connection;
             
             String query = "INSERT INTO Myorder VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Myorder.getCart().getId());
-            ps.setInt(2, Myorder.getItem().getId());
-            ps.setInt(3, Myorder.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,10 +79,7 @@ private Connection connection;
             String sql = "update Myorder set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,9 +92,6 @@ private Connection connection;
             Myorder b = (Myorder) t;
             String sql = "delete from Myorder where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
-
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +100,7 @@ private Connection connection;
 
     @Override
     public Myorder searchById(int id) {
-        Myorder b = new Myorder();
+        Myorder b = null;
         try {
             String sql = "select * from Myorder where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -100,10 +108,16 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-                b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
                 
+                Cart c= this.cadi.searchById(rs.getInt("CartId"));
+                Customer cus = this.cdi.searchById(rs.getInt("CustomerPersonId"));
+                if(c != null && cus != null){
+                    b.setCustomerPersonId(cus);
+                    b.setCartId(c);
+                }
+                b.setId(rs.getInt("Id"));
+                b.setOrderDate(rs.getString("OrderDate"));
+                b.setShipTo(rs.getString("ShipTo"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);

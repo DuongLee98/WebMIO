@@ -6,7 +6,13 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Address;
 import model.Miostore;
 
 /**
@@ -15,9 +21,10 @@ import model.Miostore;
  */
 public class MiostoreDAOImpl implements DAO{
 private Connection connection;
-
+private AddressDAOImpl adi;
     public MiostoreDAOImpl(Connection connection) {
         this.connection = connection;
+        this.adi = new AddressDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Miostore> getAll() {
@@ -29,9 +36,13 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Miostore Miostore = new Miostore();
-                Miostore.setCart(rss.getObject(1, Cart.class));
-                Miostore.setItem(rss.getObject(2, Item.class));
-                Miostore.setQuantity(rss.getInt("quantity"));
+                Miostore.setId(rss.getInt("Id"));
+                Miostore.setEmail(rss.getString("Email"));
+                Miostore.setPhone(rss.getString("Phone"));
+                Address a = this.adi.searchById(rss.getInt("AddressId"));
+                if(a!=null){
+                    Miostore.setAddressId(a);
+                }
 
                 rs.add(Miostore);
             }
@@ -48,14 +59,12 @@ private Connection connection;
             
             String query = "INSERT INTO Miostore VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Miostore.getCart().getId());
-            ps.setInt(2, Miostore.getItem().getId());
-            ps.setInt(3, Miostore.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,8 +74,7 @@ private Connection connection;
             String sql = "update Miostore set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
+            
             
             p.setInt(3, b.getId());
             p.executeUpdate();
@@ -82,8 +90,7 @@ private Connection connection;
             String sql = "delete from Miostore where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +99,7 @@ private Connection connection;
 
     @Override
     public Miostore searchById(int id) {
-        Miostore b = new Miostore();
+        Miostore b = null;
         try {
             String sql = "select * from Miostore where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -101,8 +108,13 @@ private Connection connection;
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+                
+                b.setEmail(rs.getString("Email"));
+                b.setPhone(rs.getString("Phone"));
+                Address a = this.adi.searchById(rs.getInt("AddressId"));
+                if(a!=null){
+                    b.setAddressId(a);
+                }
                 
             }
         } catch (SQLException ex) {

@@ -6,7 +6,13 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Myorder;
 import model.Shipment;
 
 /**
@@ -15,9 +21,10 @@ import model.Shipment;
  */
 public class ShipmentDAOImpl implements DAO{
 private Connection connection;
-
+private MyorderDAOImpl mdi;
     public ShipmentDAOImpl(Connection connection) {
         this.connection = connection;
+        this.mdi = new MyorderDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Shipment> getAll() {
@@ -29,9 +36,15 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Shipment Shipment = new Shipment();
-                Shipment.setCart(rss.getObject(1, Cart.class));
-                Shipment.setItem(rss.getObject(2, Item.class));
-                Shipment.setQuantity(rss.getInt("quantity"));
+                Myorder m = this.mdi.searchById(rss.getInt("Orderid"));
+                if(m != null){
+                    Shipment.setOrderId(m);
+                }
+                Shipment.setId(rss.getInt("Id"));
+                Shipment.setStatus(rss.getString("Status"));
+                Shipment.setArrived(rss.getBoolean("arrived"));
+                Shipment.setArrivalAddress(rss.getString("ArrivalAddress"));
+                Shipment.setShipCost(rss.getInt("ShipCost"));
 
                 rs.add(Shipment);
             }
@@ -48,14 +61,12 @@ private Connection connection;
             
             String query = "INSERT INTO Shipment VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Shipment.getCart().getId());
-            ps.setInt(2, Shipment.getItem().getId());
-            ps.setInt(3, Shipment.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,8 +76,7 @@ private Connection connection;
             String sql = "update Shipment set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
+            
             
             p.setInt(3, b.getId());
             p.executeUpdate();
@@ -82,8 +92,7 @@ private Connection connection;
             String sql = "delete from Shipment where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +101,7 @@ private Connection connection;
 
     @Override
     public Shipment searchById(int id) {
-        Shipment b = new Shipment();
+        Shipment b = null;
         try {
             String sql = "select * from Shipment where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -100,9 +109,15 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
+                Myorder m = this.mdi.searchById(rs.getInt("Orderid"));
+                if(m != null){
+                    b.setOrderId(m);
+                }
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+                b.setStatus(rs.getString("Status"));
+                b.setArrived(rs.getBoolean("arrived"));
+                b.setArrivalAddress(rs.getString("ArrivalAddress"));
+                b.setShipCost(rs.getInt("ShipCost"));
                 
             }
         } catch (SQLException ex) {

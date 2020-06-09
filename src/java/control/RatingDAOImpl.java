@@ -6,7 +6,13 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Item;
 import model.Rating;
 
 /**
@@ -15,9 +21,10 @@ import model.Rating;
  */
 public class RatingDAOImpl implements DAO{
 private Connection connection;
-
+private ItemDAOImpl idi;
     public RatingDAOImpl(Connection connection) {
         this.connection = connection;
+        this.idi = new ItemDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Rating> getAll() {
@@ -29,10 +36,15 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Rating Rating = new Rating();
-                Rating.setCart(rss.getObject(1, Cart.class));
-                Rating.setItem(rss.getObject(2, Item.class));
-                Rating.setQuantity(rss.getInt("quantity"));
-
+                Rating.setId(rss.getInt("Id"));
+                Item item = this.idi.searchById(rss.getInt("Itemid"));
+                if(item != null){
+                    Rating.setItemId(item);
+                }
+                Rating.setComment(rss.getString("Comment"));
+                Rating.setStar(rss.getInt("star"));
+                
+                
                 rs.add(Rating);
             }
         } catch (SQLException ex) {
@@ -48,14 +60,12 @@ private Connection connection;
             
             String query = "INSERT INTO Rating VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Rating.getCart().getId());
-            ps.setInt(2, Rating.getItem().getId());
-            ps.setInt(3, Rating.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,10 +75,7 @@ private Connection connection;
             String sql = "update Rating set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,8 +89,6 @@ private Connection connection;
             String sql = "delete from Rating where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +97,7 @@ private Connection connection;
 
     @Override
     public Rating searchById(int id) {
-        Rating b = new Rating();
+        Rating b = null;
         try {
             String sql = "select * from Rating where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -101,8 +106,12 @@ private Connection connection;
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+                Item item = this.idi.searchById(rs.getInt("Itemid"));
+                if(item != null){
+                    b.setItemId(item);
+                }
+                b.setComment(rs.getString("Comment"));
+                b.setStar(rs.getInt("star"));
                 
             }
         } catch (SQLException ex) {

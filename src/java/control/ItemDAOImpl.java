@@ -6,8 +6,15 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Item;
+import model.Pricetag;
+import model.Product;
 
 /**
  *
@@ -15,9 +22,12 @@ import model.Item;
  */
 public class ItemDAOImpl implements DAO{
 private Connection connection;
-
+private PricetagDAOImpl prdi;
+private ProductDAOImpl pdi;
     public ItemDAOImpl(Connection connection) {
         this.connection = connection;
+        this.pdi = new ProductDAOImpl(this.connection);
+        this.prdi = new PricetagDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Item> getAll() {
@@ -29,10 +39,13 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Item Item = new Item();
-                Item.setCart(rss.getObject(1, Cart.class));
-                Item.setItem(rss.getObject(2, Item.class));
-                Item.setQuantity(rss.getInt("quantity"));
-
+                Product pro = this.pdi.searchById(rss.getInt("ProductId"));
+                Pricetag price = this.prdi.searchById(rss.getInt("Pricetagid"));
+                if(pro!=null && price != null){
+                    Item.setPriceTagId(price);
+                    Item.setProductId(pro);
+                }
+                Item.setId(rss.getInt("Id"));
                 rs.add(Item);
             }
         } catch (SQLException ex) {
@@ -48,14 +61,12 @@ private Connection connection;
             
             String query = "INSERT INTO Item VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Item.getCart().getId());
-            ps.setInt(2, Item.getItem().getId());
-            ps.setInt(3, Item.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,10 +76,7 @@ private Connection connection;
             String sql = "update Item set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,8 +90,6 @@ private Connection connection;
             String sql = "delete from Item where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +98,7 @@ private Connection connection;
 
     @Override
     public Item searchById(int id) {
-        Item b = new Item();
+        Item b = null;
         try {
             String sql = "select * from Item where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -100,9 +106,13 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
+                Product pro = this.pdi.searchById(rs.getInt("ProductId"));
+                Pricetag price = this.prdi.searchById(rs.getInt("Pricetagid"));
+                if(pro!=null && price != null){
+                    b.setPriceTagId(price);
+                    b.setProductId(pro);
+                }
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
                 
             }
         } catch (SQLException ex) {

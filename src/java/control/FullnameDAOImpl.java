@@ -6,7 +6,12 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Fullname;
 
 /**
@@ -29,10 +34,10 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Fullname Fullname = new Fullname();
-                Fullname.setCart(rss.getObject(1, Cart.class));
-                Fullname.setItem(rss.getObject(2, Item.class));
-                Fullname.setQuantity(rss.getInt("quantity"));
-
+                Fullname.setId(rss.getInt("Id"));
+                Fullname.setFirstname(rss.getString("Firstname"));
+                Fullname.setMidname(rss.getString("Midname"));
+                Fullname.setLastname(rss.getString("Lastname"));
                 rs.add(Fullname);
             }
         } catch (SQLException ex) {
@@ -48,14 +53,12 @@ private Connection connection;
             
             String query = "INSERT INTO Fullname VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Fullname.getCart().getId());
-            ps.setInt(2, Fullname.getItem().getId());
-            ps.setInt(3, Fullname.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,10 +68,7 @@ private Connection connection;
             String sql = "update Fullname set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,8 +82,7 @@ private Connection connection;
             String sql = "delete from Fullname where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +91,7 @@ private Connection connection;
 
     @Override
     public Fullname searchById(int id) {
-        Fullname b = new Fullname();
+        Fullname b = null;
         try {
             String sql = "select * from Fullname where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -101,9 +100,9 @@ private Connection connection;
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
-                
+                b.setFirstname(rs.getString("Firstname"));
+                b.setMidname(rs.getString("Midname"));
+                b.setLastname(rs.getString("Lastname"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);

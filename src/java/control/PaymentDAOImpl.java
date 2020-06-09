@@ -6,7 +6,13 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Myorder;
 import model.Payment;
 
 /**
@@ -15,9 +21,10 @@ import model.Payment;
  */
 public class PaymentDAOImpl implements DAO{
 private Connection connection;
-
+private MyorderDAOImpl mdi;
     public PaymentDAOImpl(Connection connection) {
         this.connection = connection;
+        this.mdi = new MyorderDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Payment> getAll() {
@@ -29,10 +36,16 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Payment Payment = new Payment();
-                Payment.setCart(rss.getObject(1, Cart.class));
-                Payment.setItem(rss.getObject(2, Item.class));
-                Payment.setQuantity(rss.getInt("quantity"));
-
+                Payment.setId(rss.getInt("Id"));
+                
+                Myorder mo = this.mdi.searchById(rss.getInt("OrderId"));
+                
+                if(mo != null){
+                    Payment.setOrderId(mo);
+                }
+                Payment.setPaymentStt(rss.getBoolean("PaymentStt"));
+                Payment.setTotalWithShip(rss.getInt("TotalWithShip"));
+                
                 rs.add(Payment);
             }
         } catch (SQLException ex) {
@@ -48,14 +61,12 @@ private Connection connection;
             
             String query = "INSERT INTO Payment VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Payment.getCart().getId());
-            ps.setInt(2, Payment.getItem().getId());
-            ps.setInt(3, Payment.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,10 +76,9 @@ private Connection connection;
             String sql = "update Payment set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
+            
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -82,8 +92,7 @@ private Connection connection;
             String sql = "delete from Payment where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +101,7 @@ private Connection connection;
 
     @Override
     public Payment searchById(int id) {
-        Payment b = new Payment();
+        Payment b = null;
         try {
             String sql = "select * from Payment where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -101,8 +110,14 @@ private Connection connection;
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+                
+                Myorder mo = this.mdi.searchById(rs.getInt("OrderId"));
+                
+                if(mo != null){
+                    b.setOrderId(mo);
+                }
+                b.setPaymentStt(rs.getBoolean("PaymentStt"));
+                b.setTotalWithShip(rs.getInt("TotalWithShip"));
                 
             }
         } catch (SQLException ex) {

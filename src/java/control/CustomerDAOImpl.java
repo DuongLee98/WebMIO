@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Customer;
+import model.Person;
 
 /**
  *
@@ -20,9 +21,10 @@ import model.Customer;
  */
 public class CustomerDAOImpl implements DAO{
 private Connection connection;
-
+private PersonDAOImpl pdi;
     public CustomerDAOImpl(Connection connection) {
         this.connection = connection;
+        this.pdi = new PersonDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Customer> getAll() {
@@ -33,12 +35,14 @@ private Connection connection;
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
-//                Customer Customer = new Customer();
-//                Customer.setCart(rss.getObject(1, Cart.class));
-//                Customer.setItem(rss.getObject(2, Item.class));
-//                Customer.setQuantity(rss.getInt("quantity"));
-
-//                rs.add(Customer);
+                Customer Customer = new Customer();
+                Person p = this.pdi.searchById(rss.getInt("PersonId"));
+                if(p != null){
+                    Customer.setPerson(p);
+                    
+                }
+                Customer.setBonusPoint(rss.getInt("BonusPoint"));
+                rs.add(Customer);
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,7 +100,7 @@ private Connection connection;
 
     @Override
     public Customer searchById(int id) {
-        Customer b = new Customer();
+        Customer b = null;
         try {
             String sql = "select * from Customer where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -104,9 +108,12 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-//                b.setId(rs.getInt("Id"));
-//                b.setPaymentId(rs.getObject(2, Payment.class));
-//                b.setPayDate(rs.getString("PayDate"));
+                Person per = this.pdi.searchById(rs.getInt("PersonId"));
+                if(per != null){
+                    b.setPerson(per);
+                    
+                }
+                b.setBonusPoint(rs.getInt("BonusPoint"));
                 
             }
         } catch (SQLException ex) {

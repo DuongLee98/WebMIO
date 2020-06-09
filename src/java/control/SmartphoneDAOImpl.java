@@ -6,7 +6,12 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Smartphone;
 
 /**
@@ -29,9 +34,7 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Smartphone Smartphone = new Smartphone();
-                Smartphone.setCart(rss.getObject(1, Cart.class));
-                Smartphone.setItem(rss.getObject(2, Item.class));
-                Smartphone.setQuantity(rss.getInt("quantity"));
+                
 
                 rs.add(Smartphone);
             }
@@ -48,14 +51,12 @@ private Connection connection;
             
             String query = "INSERT INTO Smartphone VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Smartphone.getCart().getId());
-            ps.setInt(2, Smartphone.getItem().getId());
-            ps.setInt(3, Smartphone.getQuantity());
+            
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -65,8 +66,7 @@ private Connection connection;
             String sql = "update Smartphone set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
+            
             
             p.setInt(3, b.getId());
             p.executeUpdate();
@@ -82,8 +82,7 @@ private Connection connection;
             String sql = "delete from Smartphone where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -100,9 +99,7 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-                b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+               
                 
             }
         } catch (SQLException ex) {

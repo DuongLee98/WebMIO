@@ -6,7 +6,15 @@
 package control;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import model.Employee;
+import model.Miostore;
+import model.Person;
 
 /**
  *
@@ -14,9 +22,12 @@ import java.util.ArrayList;
  */
 public class EmployeeDAOImpl implements DAO{
 private Connection connection;
-
+private PersonDAOImpl pdi;
+private MiostoreDAOImpl mdi;
     public EmployeeDAOImpl(Connection connection) {
         this.connection = connection;
+        this.pdi = new PersonDAOImpl(this.connection);
+        this.mdi = new MiostoreDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Employee> getAll() {
@@ -28,10 +39,14 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Employee Employee = new Employee();
-                Employee.setCart(rss.getObject(1, Cart.class));
-                Employee.setItem(rss.getObject(2, Item.class));
-                Employee.setQuantity(rss.getInt("quantity"));
-
+                Person p = this.pdi.searchById(rss.getInt("Personid"));
+                Miostore m = this.mdi.searchById(rss.getInt("Miostoreid"));
+                if(p != null && m != null){
+                    Employee.setPerson(p);
+                    Employee.setMIOStoreId(m);
+                }
+                Employee.setRole(rss.getString("Role"));
+                Employee.setSalary(rss.getInt("Salary"));
                 rs.add(Employee);
             }
         } catch (SQLException ex) {
@@ -47,14 +62,12 @@ private Connection connection;
             
             String query = "INSERT INTO Employee VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            ps.setInt(1, Employee.getCart().getId());
-            ps.setInt(2, Employee.getItem().getId());
-            ps.setInt(3, Employee.getQuantity());
+           
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-+
+
     }
 
     @Override
@@ -64,10 +77,7 @@ private Connection connection;
             String sql = "update Employee set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            p.setInt(1, b.getPaymentId().getId());
-            p.setString(2, b.getPayDate());
             
-            p.setInt(3, b.getId());
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,8 +91,7 @@ private Connection connection;
             String sql = "delete from Employee where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            p.setInt(1, b.getId());
-            p.setInt(2, b.getPaymentId().getId());
+            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -91,7 +100,7 @@ private Connection connection;
 
     @Override
     public Employee searchById(int id) {
-        Employee b = new Employee();
+        Employee b = null;
         try {
             String sql = "select * from Employee where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -99,9 +108,14 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-                b.setId(rs.getInt("Id"));
-                b.setPaymentId(rs.getObject(2, Payment.class));
-                b.setPayDate(rs.getString("PayDate"));
+                Person per = this.pdi.searchById(rs.getInt("Personid"));
+                Miostore m = this.mdi.searchById(rs.getInt("Miostoreid"));
+                if(p != null && m != null){
+                    b.setPerson(per);
+                    b.setMIOStoreId(m);
+                }
+                b.setRole(rs.getString("Role"));
+                b.setSalary(rs.getInt("Salary"));
                 
             }
         } catch (SQLException ex) {

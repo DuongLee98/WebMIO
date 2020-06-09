@@ -5,6 +5,7 @@
  */
 package control;
 
+import config.ConnectDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,9 +23,10 @@ import model.Person;
  */
 public class AccountregistryDAOImpl implements DAO{
     private Connection connection;
-
+    private AccountDAOImpl accountdi;
     public AccountregistryDAOImpl(Connection connection) {
         this.connection = connection;
+        this.accountdi = new AccountDAOImpl(this.connection);
     }
     @Override
     public ArrayList<Accountregistry> getAll() {
@@ -37,7 +39,11 @@ public class AccountregistryDAOImpl implements DAO{
             while (rss.next()) {
                 Accountregistry account = new Accountregistry();
                 account.setId(rss.getInt("Id"));
-                account.setAccountId(rss.getObject(2, Account.class));
+//                account.setAccountId(rss.getObject(2, Account.class));
+                Account a = this.accountdi.searchById(rss.getInt("AccountId"));
+                if(a != null){
+                    account.setAccountId(a);
+                }
                 account.setRegistDate(rss.getString("RegistDate"));
 
                 rs.add(account);
@@ -97,7 +103,7 @@ public class AccountregistryDAOImpl implements DAO{
 
     @Override
     public Accountregistry searchById(int id) {
-        Accountregistry a = new Accountregistry();
+        Accountregistry a = null;
         try {
             String sql = "select * from accountregistry where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
@@ -106,7 +112,10 @@ public class AccountregistryDAOImpl implements DAO{
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
                 a.setId(rs.getInt("Id"));
-                a.setAccountId(rs.getObject(2, Account.class));
+                Account account = this.accountdi.searchById(rs.getInt("AccountId"));
+                if(account != null){
+                    a.setAccountId(account);
+                }
                 a.setRegistDate(rs.getString("RegistDate"));
             }
         } catch (SQLException ex) {

@@ -22,9 +22,12 @@ import model.Item;
  */
 public class CartItemDAOImpl implements DAO{
 private Connection connection;
-
+private CartDAOImpl cdi;
+private ItemDAOImpl idi;
     public CartItemDAOImpl(Connection connection) {
         this.connection = connection;
+        this.cdi = new CartDAOImpl(this.connection);
+        this.idi = new ItemDAOImpl(this.connection);
     }
         @Override
     public ArrayList<CartItem> getAll() {
@@ -36,8 +39,15 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 CartItem cartItem = new CartItem();
-                cartItem.setCart(rss.getObject(1, Cart.class));
-                cartItem.setItem(rss.getObject(2, Item.class));
+//                cartItem.setCart(rss.getObject(1, Cart.class));
+//                cartItem.setItem(rss.getObject(2, Item.class));
+                Cart c = this.cdi.searchById(rss.getInt("CartID"));
+                Item item = this.idi.searchById(rss.getInt("ItemId"));
+                
+                if(c != null && item != null){
+                    cartItem.setCart(c);
+                    cartItem.setItem(item);
+                }
                 cartItem.setQuantity(rss.getInt("quantity"));
 
                 rs.add(cartItem);
@@ -107,8 +117,14 @@ private Connection connection;
             
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-                b.setCart(rs.getObject(1, Cart.class));
-                b.setItem(rs.getObject(2, Item.class));
+//                b.setCart(rs.getObject(1, Cart.class));
+//                b.setItem(rs.getObject(2, Item.class));
+                Cart cart = this.cdi.searchById(rs.getInt("CartId"));
+                Item item = this.idi.searchById(rs.getInt("ItemId"));
+                if(cart != null && item!= null){
+                    b.setCart(cart);
+                    b.setItem(item);
+                }
                 b.setQuantity(rs.getInt("quantity"));
                 
             }
