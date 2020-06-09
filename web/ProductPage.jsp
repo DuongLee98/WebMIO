@@ -152,7 +152,7 @@
                             <% for (int i=0; i<allproduct.size(); i++) { %>
                             <tr>
                                 <th scope="row"><%= allproduct.get(i).getId() %></th>
-                                
+                                <th><%= allproduct.get(i).getCategoryId().getName() %></th>
                             <% } %>
                         </tbody>
                     </table>
