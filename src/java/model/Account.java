@@ -43,8 +43,7 @@ public class Account implements Serializable {
     @Size(max = 255)
     @Column(name = "Password")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountId")
-    private List<Accountregistry> accountregistryList;
+    
     @JoinColumn(name = "PersonId", referencedColumnName = "Id")
     @ManyToOne(optional = false)
     private Person personId;
@@ -80,14 +79,6 @@ public class Account implements Serializable {
         this.password = password;
     }
 
-    @XmlTransient
-    public List<Accountregistry> getAccountregistryList() {
-        return accountregistryList;
-    }
-
-    public void setAccountregistryList(List<Accountregistry> accountregistryList) {
-        this.accountregistryList = accountregistryList;
-    }
 
     public Person getPersonId() {
         return personId;

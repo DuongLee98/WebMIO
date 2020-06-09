@@ -6,7 +6,7 @@
 package router;
 
 import config.ConnectDB;
-import control.AccountDAO;
+import control.AccountDAOImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class DoAccount extends HttpServlet {
             throws ServletException, IOException {
         
         response.setContentType("text/html;charset=UTF-8");
-        AccountDAO adao = new AccountDAO(ConnectDB.getCon());
+        AccountDAOImpl adao = new AccountDAOImpl(ConnectDB.getCon());
         ArrayList<Account> listacc = adao.getAll();
         HttpSession session = request.getSession();
         session.setAttribute("listacc", listacc);
@@ -85,7 +85,7 @@ public class DoAccount extends HttpServlet {
     }// </editor-fold>
     
     public static void main(String[] args) {
-        AccountDAO adao = new AccountDAO(ConnectDB.getCon());
+        AccountDAOImpl adao = new AccountDAOImpl(ConnectDB.getCon());
         ArrayList<Account> listacc = adao.getAll();
         System.out.println(listacc.size());
     }
