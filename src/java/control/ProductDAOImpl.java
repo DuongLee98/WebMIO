@@ -87,7 +87,7 @@ private CategoryDAOImpl cdi;
 
     @Override
     public Product searchById(int id) {
-        Product b = null;
+        Product b = new Product();
         try {
             String sql = "select * from Product where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);

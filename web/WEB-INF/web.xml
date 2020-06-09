@@ -20,6 +20,10 @@
         <servlet-name>ProductDetail</servlet-name>
         <servlet-class>router.ProductDetail</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>DoCart</servlet-name>
+        <servlet-class>router.DoCart</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DoAccount</servlet-name>
         <url-pattern>/DoAccount</url-pattern>
@@ -39,6 +43,10 @@
     <servlet-mapping>
         <servlet-name>ProductDetail</servlet-name>
         <url-pattern>/ProductDetail</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DoCart</servlet-name>
+        <url-pattern>/DoCart</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

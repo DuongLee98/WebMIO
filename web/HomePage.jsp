@@ -229,7 +229,7 @@
                                     </div>
                                 </div>
                                 
-                                <h2><a href="single-product.html"><%= allproduct.get(i).getProductname() %></a></h2>
+                                <h2><a href="ProductDetail?id=<%= allproduct.get(i).getId() %>"><%= allproduct.get(i).getProductname() %></a></h2>
                                 
                                 <div class="product-carousel-price">
                                     <ins>VND <%= allproduct.get(i).getUnitPrice() %></ins>
