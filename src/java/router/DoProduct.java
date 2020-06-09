@@ -6,6 +6,7 @@
 package router;
 
 import config.ConnectDB;
+import control.CategoryDAOImpl;
 import control.ProductDAOImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.Category;
 import model.Product;
 
 /**
@@ -23,6 +25,7 @@ import model.Product;
  */
 public class DoProduct extends HttpServlet {
     private final ProductDAOImpl pdi = new ProductDAOImpl(ConnectDB.getCon());
+    private final CategoryDAOImpl cdi = new CategoryDAOImpl(ConnectDB.getCon());
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -36,9 +39,11 @@ public class DoProduct extends HttpServlet {
             throws ServletException, IOException {
         
         ArrayList<Product> allproduct = pdi.getAll();
+        ArrayList<Category> allcategory = cdi.getAll();
+        
         HttpSession session = request.getSession();
         session.setAttribute("allproduct", allproduct);
-        
+        session.setAttribute("allcategory", allcategory);
         response.setContentType("text/html;charset=UTF-8");
         response.sendRedirect("ProductPage.jsp");
     }
@@ -69,6 +74,14 @@ public class DoProduct extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        Product p = new Product();
+        p.setCategoryId(cdi.searchById(Integer.parseInt(request.getParameter("categoryid"))));
+        p.setProductname(request.getParameter("productname"));
+        p.setUnitPrice(Integer.parseInt(request.getParameter("unitprice")));
+        p.setQuantity(Integer.parseInt(request.getParameter("quantity")));
+        p.setDescription(request.getParameter("description"));
+        p.setPictures(request.getParameter("pictures"));
+        pdi.add(p);
         processRequest(request, response);
     }
 

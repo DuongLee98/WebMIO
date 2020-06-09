@@ -4,7 +4,10 @@
     Author     : DuongLee
 --%>
 
+<%@page import="model.Product"%>
+<%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<% ArrayList<Product> allproduct = (ArrayList<Product>) session.getAttribute("allproduct"); %>
 <!DOCTYPE html>
 <!--
 	ustora by freshdesignweb.com
@@ -116,7 +119,7 @@
                 </div> 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.html">Home</a></li>
+                        <li class="active"><a href="DoHome">Home</a></li>
                         <li><a href="shop.html">Shop page</a></li>
                         <li><a href="single-product.html">Single product</a></li>
                         <li><a href="cart.html">Cart</a></li>
@@ -130,8 +133,8 @@
         </div>
     </div> <!-- End mainmenu area -->
     
-    <div class="slider-area">
-        	<!-- Slider -->
+<!--    <div class="slider-area">
+        	 Slider 
 			<div class="block-slider block-slider4">
 				<ul class="" id="bxslider-home4">
 					<li>
@@ -173,10 +176,10 @@
 					</li>
 				</ul>
 			</div>
-			<!-- ./Slider -->
-    </div> <!-- End slider area -->
+			 ./Slider 
+    </div>  End slider area -->
     
-    <div class="promo-area">
+<!--    <div class="promo-area">
         <div class="zigzag-bottom"></div>
         <div class="container">
             <div class="row">
@@ -206,7 +209,7 @@
                 </div>
             </div>
         </div>
-    </div> <!-- End promo area -->
+    </div>  End promo area -->
     
     <div class="maincontent-area">
         <div class="zigzag-bottom"></div>
@@ -216,95 +219,23 @@
                     <div class="latest-product">
                         <h2 class="section-title">Latest Products</h2>
                         <div class="product-carousel">
+                            <% for (int i=allproduct.size()-1; i>=0; i--) { %>
                             <div class="single-product">
                                 <div class="product-f-image">
-                                    <img src="img/product-1.jpg" alt="">
+                                    <img src="<%= allproduct.get(i).getPictures() %>" alt="">
                                     <div class="product-hover">
                                         <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
+                                        <a href="ProductDetail?id=<%= allproduct.get(i).getId() %>" class="view-details-link"><i class="fa fa-link"></i> See details</a>
                                     </div>
                                 </div>
                                 
-                                <h2><a href="single-product.html">Samsung Galaxy s5- 2015</a></h2>
+                                <h2><a href="single-product.html"><%= allproduct.get(i).getProductname() %></a></h2>
                                 
                                 <div class="product-carousel-price">
-                                    <ins>$700.00</ins> <del>$100.00</del>
+                                    <ins>VND <%= allproduct.get(i).getUnitPrice() %></ins>
                                 </div> 
                             </div>
-                            <div class="single-product">
-                                <div class="product-f-image">
-                                    <img src="img/product-2.jpg" alt="">
-                                    <div class="product-hover">
-                                        <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2>Nokia Lumia 1320</h2>
-                                <div class="product-carousel-price">
-                                    <ins>$899.00</ins> <del>$999.00</del>
-                                </div> 
-                            </div>
-                            <div class="single-product">
-                                <div class="product-f-image">
-                                    <img src="img/product-3.jpg" alt="">
-                                    <div class="product-hover">
-                                        <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2>LG Leon 2015</h2>
-
-                                <div class="product-carousel-price">
-                                    <ins>$400.00</ins> <del>$425.00</del>
-                                </div>                                 
-                            </div>
-                            <div class="single-product">
-                                <div class="product-f-image">
-                                    <img src="img/product-4.jpg" alt="">
-                                    <div class="product-hover">
-                                        <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2><a href="single-product.html">Sony microsoft</a></h2>
-
-                                <div class="product-carousel-price">
-                                    <ins>$200.00</ins> <del>$225.00</del>
-                                </div>                            
-                            </div>
-                            <div class="single-product">
-                                <div class="product-f-image">
-                                    <img src="img/product-5.jpg" alt="">
-                                    <div class="product-hover">
-                                        <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2>iPhone 6</h2>
-
-                                <div class="product-carousel-price">
-                                    <ins>$1200.00</ins> <del>$1355.00</del>
-                                </div>                                 
-                            </div>
-                            <div class="single-product">
-                                <div class="product-f-image">
-                                    <img src="img/product-6.jpg" alt="">
-                                    <div class="product-hover">
-                                        <a href="#" class="add-to-cart-link"><i class="fa fa-shopping-cart"></i> Add to cart</a>
-                                        <a href="single-product.html" class="view-details-link"><i class="fa fa-link"></i> See details</a>
-                                    </div>
-                                </div>
-                                
-                                <h2><a href="single-product.html">Samsung gallaxy note 4</a></h2>
-
-                                <div class="product-carousel-price">
-                                    <ins>$400.00</ins>
-                                </div>                            
-                            </div>
+                            <% } %>
                         </div>
                     </div>
                 </div>
@@ -334,7 +265,7 @@
         </div>
     </div> <!-- End brands area -->
     
-    <div class="product-widget-area">
+<!--    <div class="product-widget-area">
         <div class="zigzag-bottom"></div>
         <div class="container">
             <div class="row">
@@ -484,7 +415,7 @@
                 </div>
             </div>
         </div>
-    </div> <!-- End product widget area -->
+    </div>  End product widget area -->
     
     <div class="footer-top-area">
         <div class="zigzag-bottom"></div>

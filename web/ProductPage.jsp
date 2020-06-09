@@ -4,11 +4,13 @@
     Author     : DuongLee
 --%>
 
+<%@page import="model.Category"%>
 <%@page import="model.Product"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <% ArrayList<Product> allproduct = (ArrayList<Product>) session.getAttribute("allproduct"); %>
+<% ArrayList<Category> allcategory = (ArrayList<Category>) session.getAttribute("allcategory"); %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -109,16 +111,16 @@
                 </div> 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">Home</a></li>
+                        <li class="active"><a href="DoHome">Home</a></li>
                         <li><a href="shop.html">Shop page</a></li>
                         <li><a href="single-product.html">Single product</a></li>
                         <li><a href="cart.html">Cart</a></li>
-                        <li class="active"><a href="checkout.html">Checkout</a></li>
+                        <li><a href="checkout.html">Checkout</a></li>
                         <li><a href="#">Category</a></li>
                         <li><a href="#">Others</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
-                </div>  
+                </div> 
             </div>
         </div>
     </div> <!-- End mainmenu area -->
@@ -145,13 +147,23 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Name</th>
+                                <th scope="col">Product Name</th>
+                                <th scope="col">Unit Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Imgs</th>
+                                <th scope="col">Category</th>
                             </tr>
                         </thead>
                         <tbody>
                             <% for (int i=0; i<allproduct.size(); i++) { %>
                             <tr>
                                 <th scope="row"><%= allproduct.get(i).getId() %></th>
+                                <th><%= allproduct.get(i).getProductname() %></th>
+                                <th><%= allproduct.get(i).getUnitPrice() %></th>
+                                <th><%= allproduct.get(i).getQuantity() %></th>
+                                <th><%= allproduct.get(i).getDescription() %></th>
+                                <th><img src="<%= allproduct.get(i).getPictures() %>" /></th>
                                 <th><%= allproduct.get(i).getCategoryId().getName() %></th>
                             <% } %>
                         </tbody>
@@ -161,11 +173,45 @@
                 <div class="col-md-6">
                     <div class="product-content-right">
                         <div class="woocommerce">
-                            <form action="DoCategory" method="post">
+                            <form action="DoProduct" method="post">
                                 <div class="form-group row">
-                                    <label for="inputName" class="col-sm-2 col-form-label">Name:</label>
+                                    <label for="inputName" class="col-sm-2 col-form-label">Product Name:</label>
                                     <div class="col-sm-10">
-                                        <input type="text" name="name" class="form-control" id="inputName" placeholder="Name">
+                                        <input type="text" name="productname" class="form-control" id="inputName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Unit Price:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" name="unitprice" class="form-control" id="inputName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Quantity:</label>
+                                    <div class="col-sm-10">
+                                        <input type="number" name="quantity" class="form-control" id="inputName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Description:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="description" class="form-control" id="inputName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Picture:</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" name="pictures" class="form-control" id="inputName">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputName" class="col-sm-2 col-form-label">Category:</label>
+                                    <div class="col-sm-10">
+                                        <select name="categoryid" class="form-control">
+                                            <% for (int i=0; i<allcategory.size(); i++) { %>
+                                            <option value="<%= allcategory.get(i).getId() %>"><%= allcategory.get(i).getName() %></option>
+                                            <% } %>
+                                        </select>
                                     </div>
                                 </div>
                                 

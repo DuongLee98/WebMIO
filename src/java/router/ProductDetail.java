@@ -5,24 +5,19 @@
  */
 package router;
 
-import config.ConnectDB;
-import control.ProductDAOImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import model.Product;
 
 /**
  *
  * @author DuongLee
  */
-public class DoHome extends HttpServlet {
-    private final ProductDAOImpl pdi = new ProductDAOImpl(ConnectDB.getCon());
+public class ProductDetail extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -34,13 +29,8 @@ public class DoHome extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        ArrayList<Product> allproduct = pdi.getAll();
-        
-        HttpSession session = request.getSession();
-        session.setAttribute("allproduct", allproduct);
-
         response.setContentType("text/html;charset=UTF-8");
-        response.sendRedirect("HomePage.jsp");
+        response.sendRedirect("ProductDetail.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
