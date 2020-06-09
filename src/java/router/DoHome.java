@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -6,23 +5,18 @@
  */
 package router;
 
-import config.ConnectDB;
-import control.AccountDAOImpl;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import model.Account;
 
 /**
  *
  * @author DuongLee
  */
-public class DoAccount extends HttpServlet {
+public class DoHome extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,17 +27,10 @@ public class DoAccount extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         response.setContentType("text/html;charset=UTF-8");
-        AccountDAOImpl adao = new AccountDAOImpl(ConnectDB.getCon());
-        ArrayList<Account> listacc = adao.getAll();
-        HttpSession session = request.getSession();
-        session.setAttribute("listacc", listacc);
-        //System.out.println(listacc.size());
-        response.sendRedirect("AccountView.jsp");
+        response.sendRedirect("HomePage.jsp");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -84,11 +71,5 @@ public class DoAccount extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-    
-    public static void main(String[] args) {
-        AccountDAOImpl adao = new AccountDAOImpl(ConnectDB.getCon());
-        ArrayList<Account> listacc = adao.getAll();
-        System.out.println(listacc.size());
-    }
-}
 
+}
