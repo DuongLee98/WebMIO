@@ -18,12 +18,14 @@ import model.Smartphone;
  *
  * @author kl
  */
-public class SmartphoneDAOImpl implements DAO{
-private Connection connection;
+public class SmartphoneDAOImpl implements DAO {
+
+    private Connection connection;
 
     public SmartphoneDAOImpl(Connection connection) {
         this.connection = connection;
     }
+
     @Override
     public ArrayList<Smartphone> getAll() {
         ArrayList<Smartphone> rs = new ArrayList<>();
@@ -34,7 +36,6 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Smartphone Smartphone = new Smartphone();
-                
 
                 rs.add(Smartphone);
             }
@@ -48,10 +49,10 @@ private Connection connection;
     public void add(Object t) {
         try {
             Smartphone Smartphone = (Smartphone) t;
-            
+
             String query = "INSERT INTO Smartphone VALUE (?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
+
             ps.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -66,8 +67,7 @@ private Connection connection;
             String sql = "update Smartphone set Paymentid = ? AND PayDate = ?"
                     + " where Id = ?";
             PreparedStatement p = connection.prepareCall(sql);
-            
-            
+
             p.setInt(3, b.getId());
             p.executeUpdate();
         } catch (SQLException ex) {
@@ -82,7 +82,6 @@ private Connection connection;
             String sql = "delete from Smartphone where Id =? and Paymentid = ?";
             PreparedStatement p = connection.prepareCall(sql);
 
-            
             p.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -96,16 +95,15 @@ private Connection connection;
             String sql = "select * from Smartphone where Id = ?";
             PreparedStatement p = connection.prepareStatement(sql);
             p.setInt(1, id);
-            
+
             ResultSet rs = p.executeQuery();
             if (rs.first()) {
-               
-                
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         return b;
     }
-    
+
 }

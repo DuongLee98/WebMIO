@@ -57,10 +57,12 @@ private PricetagDAOImpl pdi;
         try {
             Discount Discount = (Discount) t;
             
-            String query = "INSERT INTO Discount VALUE (?, ?, ?)";
+            String query = "INSERT INTO Discount VALUE (null, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Discount.getPriceTagId().getId());
+            ps.setInt(2, Discount.getValue());
+            ps.setString(3, Discount.getDescription());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

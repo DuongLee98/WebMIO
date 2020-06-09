@@ -65,7 +65,7 @@ public class AccountDAOImpl implements DAO {
             ps.setInt(1, a.getPersonId().getId());
             ps.setString(2, a.getUsrname());
             ps.setString(3, a.getPassword());
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

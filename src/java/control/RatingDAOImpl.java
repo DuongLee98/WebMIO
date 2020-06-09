@@ -58,10 +58,12 @@ private ItemDAOImpl idi;
         try {
             Rating Rating = (Rating) t;
             
-            String query = "INSERT INTO Rating VALUE (?, ?, ?)";
+            String query = "INSERT INTO Rating VALUE (null, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Rating.getItemId().getId());
+            ps.setInt(2, Rating.getStar());
+            ps.setString(3, Rating.getComment());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

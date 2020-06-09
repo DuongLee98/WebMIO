@@ -56,7 +56,7 @@ private Connection connection;
             ps.setInt(1, cart.getId());
             ps.setInt(2, cart.getTotal());
             
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

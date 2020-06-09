@@ -61,10 +61,15 @@ private CategoryDAOImpl cdi;
         try {
             Product Product = (Product) t;
             
-            String query = "INSERT INTO Product VALUE (?, ?, ?)";
+            String query = "INSERT INTO Product VALUE (null, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-
-            ps.executeQuery();
+            ps.setInt(1, Product.getCategoryId().getId());
+            ps.setString(2, Product.getProductname());
+            ps.setInt(3, Product.getUnitPrice());
+            ps.setInt(4, Product.getQuantity());
+            ps.setString(5, Product.getDescription());
+            ps.setString(6, Product.getPictures());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

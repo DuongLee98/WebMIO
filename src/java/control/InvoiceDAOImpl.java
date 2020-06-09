@@ -60,12 +60,12 @@ private MyorderDAOImpl modi;
         try {
             Invoice Invoice = (Invoice) t;
             
-            String query = "INSERT INTO Invoice VALUE (?, ?, ?)";
+            String query = "INSERT INTO Invoice VALUE (null, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-//            ps.setInt(1, Invoice.getCart().getId());
-//            ps.setInt(2, Invoice.getItem().getId());
-//            ps.setInt(3, Invoice.getQuantity());
-//            ps.executeQuery();
+            ps.setInt(1, Invoice.getEmployeePersonId().getPerson().getId());
+            ps.setInt(2, Invoice.getOrderId().getId());
+            ps.setInt(3, 100000);
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

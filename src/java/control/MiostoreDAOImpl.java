@@ -57,10 +57,13 @@ private AddressDAOImpl adi;
         try {
             Miostore Miostore = (Miostore) t;
             
-            String query = "INSERT INTO Miostore VALUE (?, ?, ?)";
+            String query = "INSERT INTO Miostore VALUE (null, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Miostore.getAddressId().getId());
+            ps.setString(2, "xoa ho tao cot nay voi");
+            ps.setString(3, Miostore.getPhone());
+            ps.setString(4, Miostore.getEmail());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -50,10 +50,10 @@ private Connection connection;
         try {
             Pricetag Pricetag = (Pricetag) t;
             
-            String query = "INSERT INTO Pricetag VALUE (?, ?, ?)";
+            String query = "INSERT INTO Pricetag VALUE (null, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Pricetag.getPrice());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

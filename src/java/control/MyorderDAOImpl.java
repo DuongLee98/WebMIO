@@ -62,10 +62,13 @@ private CartDAOImpl cadi;
         try {
             Myorder Myorder = (Myorder) t;
             
-            String query = "INSERT INTO Myorder VALUE (?, ?, ?)";
+            String query = "INSERT INTO Myorder VALUE (null, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Myorder.getCartId().getId());
+            ps.setInt(2, Myorder.getCustomerPersonId().getPerson().getId());
+            ps.setString(3, Myorder.getOrderDate());
+            ps.setString(4, Myorder.getShipTo());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

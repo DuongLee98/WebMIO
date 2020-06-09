@@ -51,10 +51,12 @@ private Connection connection;
         try {
             Fullname Fullname = (Fullname) t;
             
-            String query = "INSERT INTO Fullname VALUE (?, ?, ?)";
+            String query = "INSERT INTO Fullname VALUE (null, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setString(1, Fullname.getFirstname());
+            ps.setString(2, Fullname.getMidname());
+            ps.setString(3, Fullname.getLastname());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

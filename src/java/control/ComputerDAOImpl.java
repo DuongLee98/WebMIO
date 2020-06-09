@@ -36,9 +36,6 @@ private Connection connection;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 Computer Computer = new Computer();
-//                Computer.setCart(rss.getObject(1, Cart.class));
-//                Computer.setItem(rss.getObject(2, Item.class));
-//                Computer.setQuantity(rss.getInt("quantity"));
 
                 rs.add(Computer);
             }
@@ -58,7 +55,7 @@ private Connection connection;
 //            ps.setInt(1, Computer.getCart().getId());
 //            ps.setInt(2, Computer.getItem().getId());
 //            ps.setInt(3, Computer.getQuantity());
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

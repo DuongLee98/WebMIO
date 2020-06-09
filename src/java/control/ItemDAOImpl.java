@@ -59,10 +59,11 @@ private ProductDAOImpl pdi;
         try {
             Item Item = (Item) t;
             
-            String query = "INSERT INTO Item VALUE (?, ?, ?)";
+            String query = "INSERT INTO Item VALUE (null, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Item.getPriceTagId().getId());
+            ps.setInt(2, Item.getProductId().getId());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
