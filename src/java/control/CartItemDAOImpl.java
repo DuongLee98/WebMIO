@@ -39,8 +39,6 @@ private ItemDAOImpl idi;
             ResultSet rss = ps.executeQuery();
             while (rss.next()) {
                 CartItem cartItem = new CartItem();
-//                cartItem.setCart(rss.getObject(1, Cart.class));
-//                cartItem.setItem(rss.getObject(2, Item.class));
                 Cart c = this.cdi.searchById(rss.getInt("CartID"));
                 Item item = this.idi.searchById(rss.getInt("ItemId"));
                 
@@ -68,7 +66,7 @@ private ItemDAOImpl idi;
             ps.setInt(1, cartItem.getCart().getId());
             ps.setInt(2, cartItem.getItem().getId());
             ps.setInt(3, cartItem.getQuantity());
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

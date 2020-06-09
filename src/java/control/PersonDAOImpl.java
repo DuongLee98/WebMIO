@@ -62,10 +62,12 @@ private FullnameDAOImpl fdi;
         try {
             Person Person = (Person) t;
             
-            String query = "INSERT INTO Person VALUE (?, ?, ?)";
+            String query = "INSERT INTO Person VALUE (null, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Person.getAddressId().getId());
+            ps.setInt(2, Person.getFullNameId().getId());
+            ps.setString(3, Person.getDob());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -63,7 +63,7 @@ public class AccountregistryDAOImpl implements DAO{
             ps.setInt(1, a.getAccountId().getId());
             ps.setString(2, a.getRegistDate());
             
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -59,7 +59,7 @@ private Connection connection;
             ps.setString(2, a.getStreet());
             ps.setString(3, a.getDistrict());
             ps.setString(4, a.getCity());
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -59,10 +59,14 @@ private MyorderDAOImpl mdi;
         try {
             Shipment Shipment = (Shipment) t;
             
-            String query = "INSERT INTO Shipment VALUE (?, ?, ?)";
+            String query = "INSERT INTO Shipment VALUE (null, ?, ?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Shipment.getOrderId().getId());
+            ps.setString(2, Shipment.getStatus());
+            ps.setBoolean(3, Shipment.getArrived());
+            ps.setString(4, Shipment.getArrivalAddress());
+            ps.setInt(5, Shipment.getShipCost());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

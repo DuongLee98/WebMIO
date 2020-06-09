@@ -59,10 +59,12 @@ private MyorderDAOImpl mdi;
         try {
             Payment Payment = (Payment) t;
             
-            String query = "INSERT INTO Payment VALUE (?, ?, ?)";
+            String query = "INSERT INTO Payment VALUE (null, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-            
-            ps.executeQuery();
+            ps.setInt(1, Payment.getOrderId().getId());
+            ps.setBoolean(2, Payment.getPaymentStt());
+            ps.setInt(3, Payment.getTotalWithShip());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -60,10 +60,13 @@ private MiostoreDAOImpl mdi;
         try {
             Employee Employee = (Employee) t;
             
-            String query = "INSERT INTO Employee VALUE (?, ?, ?)";
+            String query = "INSERT INTO Employee VALUE (?, ?, ?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-           
-            ps.executeQuery();
+            ps.setInt(1, Employee.getSalary());
+            ps.setString(2, Employee.getRole());
+            ps.setInt(3, Employee.getPerson().getId());
+            ps.setInt(4, Employee.getMIOStoreId().getId());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

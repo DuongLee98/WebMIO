@@ -55,12 +55,11 @@ private PersonDAOImpl pdi;
         try {
             Customer Customer = (Customer) t;
             
-            String query = "INSERT INTO Customer VALUE (?, ?, ?)";
+            String query = "INSERT INTO Customer VALUE (?, ?)";
             PreparedStatement ps = connection.prepareStatement(query);
-//            ps.setInt(1, Customer.getCart().getId());
-//            ps.setInt(2, Customer.getItem().getId());
-//            ps.setInt(3, Customer.getQuantity());
-            ps.executeQuery();
+            ps.setInt(1, Customer.getBonusPoint());
+            ps.setInt(2, Customer.getPerson().getId());
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }

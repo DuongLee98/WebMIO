@@ -58,7 +58,7 @@ private Connection connection;
             ps.setInt(1, bill.getPaymentId().getId());
             ps.setString(2, bill.getPayDate());
             
-            ps.executeQuery();
+            ps.execute();
         } catch (SQLException ex) {
             Logger.getLogger(AccountDAOImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
