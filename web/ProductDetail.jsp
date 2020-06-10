@@ -4,7 +4,7 @@
     Author     : DuongLee
 --%>
 
-<%@page import="model.Product"%>
+<%@page import="model.product.Product"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <% Product product = (Product) session.getAttribute("product"); %>
 <% int totalcart = (Integer) session.getAttribute("totalcart"); %>
@@ -120,10 +120,10 @@
                 </div> 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="DoHome">Home</a></li>
                         <li><a href="shop.html">Shop page</a></li>
                         <li class="active"><a href="single-product.html">Single product</a></li>
-                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="DoCart">Cart</a></li>
                         <li><a href="checkout.html">Checkout</a></li>
                         <li><a href="#">Category</a></li>
                         <li><a href="#">Others</a></li>

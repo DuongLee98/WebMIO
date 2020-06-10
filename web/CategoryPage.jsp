@@ -5,7 +5,7 @@
 --%>
 
 <%@page import="java.util.ArrayList"%>
-<%@page import="model.Category"%>
+<%@page import="model.product.Category"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <% ArrayList<Category> allcategory = (ArrayList<Category>) session.getAttribute("allcategory"); %>
@@ -114,8 +114,8 @@
                         <li><a href="single-product.html">Single product</a></li>
                         <li><a href="cart.html">Cart</a></li>
                         <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="#">Category</a></li>
-                        <li><a href="#">Others</a></li>
+                        <li><a href="DoCategory">Category</a></li>
+                        <li><a href="DoProduct">Product</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>  

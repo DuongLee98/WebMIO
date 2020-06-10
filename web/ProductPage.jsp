@@ -4,8 +4,8 @@
     Author     : DuongLee
 --%>
 
-<%@page import="model.Category"%>
-<%@page import="model.Product"%>
+<%@page import="model.product.Category"%>
+<%@page import="model.product.Product"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
@@ -116,8 +116,8 @@
                         <li><a href="single-product.html">Single product</a></li>
                         <li><a href="cart.html">Cart</a></li>
                         <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="#">Category</a></li>
-                        <li><a href="#">Others</a></li>
+                        <li><a href="DoCategory">Category</a></li>
+                        <li><a href="DoProduct">Product</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div> 

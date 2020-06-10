@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Employee;
-import model.Invoice;
-import model.Myorder;
-import model.Person;
+import model.miostore.Employee;
+import model.orderprocess.Invoice;
+import model.orderprocess.Myorder;
+import model.userinfomation.Person;
 
 /**
  *

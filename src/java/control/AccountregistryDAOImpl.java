@@ -13,9 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Account;
-import model.Accountregistry;
-import model.Person;
+import model.userinfomation.Account;
+import model.userinfomation.Accountregistry;
+import model.userinfomation.Person;
 
 /**
  *

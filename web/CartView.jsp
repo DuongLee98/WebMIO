@@ -124,8 +124,8 @@
                         <li><a href="single-product.html">Single product</a></li>
                         <li class="active"><a href="DoCart">Cart</a></li>
                         <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="#">Category</a></li>
-                        <li><a href="#">Others</a></li>
+                        <li><a href="DoCategory">Category</a></li>
+                        <li><a href="DoProduct">Product</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>  

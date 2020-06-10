@@ -12,8 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Bill;
-import model.Payment;
+import model.payment.Bill;
+import model.payment.Payment;
 
 /**
  *

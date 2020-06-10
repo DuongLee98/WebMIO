@@ -5,6 +5,7 @@
  */
 package control;
 
+import control.item.ItemDAOImpl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,9 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Cart;
-import model.CartItem;
-import model.Item;
+import model.cart.Cart;
+import model.cart.CartItem;
+import model.item.Item;
 
 /**
  *

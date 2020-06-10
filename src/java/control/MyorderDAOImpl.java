@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Cart;
-import model.Customer;
-import model.Myorder;
+import model.cart.Cart;
+import model.cart.Customer;
+import model.orderprocess.Myorder;
 
 /**
  *

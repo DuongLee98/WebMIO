@@ -12,9 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Employee;
-import model.Miostore;
-import model.Person;
+import model.miostore.Employee;
+import model.miostore.Miostore;
+import model.userinfomation.Person;
 
 /**
  *

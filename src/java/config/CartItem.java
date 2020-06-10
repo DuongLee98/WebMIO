@@ -5,7 +5,7 @@
  */
 package config;
 
-import model.Product;
+import model.product.Product;
 
 /**
  *

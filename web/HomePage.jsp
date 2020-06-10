@@ -4,7 +4,7 @@
     Author     : DuongLee
 --%>
 
-<%@page import="model.Product"%>
+<%@page import="model.product.Product"%>
 <%@page import="java.util.ArrayList"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <% ArrayList<Product> allproduct = (ArrayList<Product>) session.getAttribute("allproduct"); %>
@@ -120,12 +120,12 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="DoHome">Home</a></li>
-                        <li><a href="shop.html">Shop page</a></li>
+                        <li><a href="DoHome">Shop page</a></li>
                         <li><a href="single-product.html">Single product</a></li>
-                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="DoCart">Cart</a></li>
                         <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="#">Category</a></li>
-                        <li><a href="#">Others</a></li>
+                        <li><a href="DoCategory">Category</a></li>
+                        <li><a href="DoProduct">Product</a></li>
                         <li><a href="#">Contact</a></li>
                     </ul>
                 </div>  
